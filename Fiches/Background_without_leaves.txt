@@ -1,0 +1,4 @@
+Plante : N/A
+Conseil :
+
+Ces images servent souvent de points de référence dans l'apprentissage automatique pour aider le modèle à se concentrer sur les feuilles de la plante. Dans un jardin réel, cela correspondrait à une zone sans culture, où il est important de contrôler les mauvaises herbes et de préparer le sol pour la prochaine plantation.

@@ -1,0 +1,11 @@
+Plante : Tomate
+Maladie : Tache bactérienne
+Conseil :
+
+La prévention est la clé. Utiliser des semences traitées à l'eau chaude ou à l'eau de Javel diluée.
+
+Éviter de manipuler les plantes lorsqu'elles sont mouillées.
+
+Utiliser un système d'irrigation au goutte-à-goutte pour éviter l'arrosage aérien.
+
+La rotation des cultures est essentielle ; éviter de planter des tomates ou des poivrons dans le même sol pendant au moins trois ans.
