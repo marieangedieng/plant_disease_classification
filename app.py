@@ -165,7 +165,7 @@ if menu == "📖 Informations":
     - L’utilisateur charge une image, l’IA donne le diagnostic instantanément accompagné d’une fiche explicative.  
     """)
 
-    st.image("heatmap_example.jpg", caption="Exemple d'interprétation d'une heatmap", use_column_width=True)
+    st.image("heatmap.jpg", caption="Exemple d'interprétation d'une heatmap", use_container_width=True)
     
     st.markdown("""
     ### 📊 Comment interpréter une Heatmap ?
