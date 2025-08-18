@@ -165,11 +165,33 @@ if menu == "📖 Informations":
     - L’utilisateur charge une image, l’IA donne le diagnostic instantanément accompagné d’une fiche explicative.  
     """)
 
+    st.image("heatmap_example.jpg", caption="Exemple d'interprétation d'une heatmap", use_column_width=True)
+    
+    st.markdown("""
+    ### 📊 Comment interpréter une Heatmap ?
+    Une **heatmap** appliquée à une image permet de visualiser les zones qui ont le plus influencé la décision du modèle.
+    Elle est souvent générée avec une méthode comme **Grad-CAM**.
+    
+    Voici comment l’interpréter :
+    - 🔴 **Zones rouges / chaudes** : zones les plus importantes utilisées par le modèle pour sa prédiction.
+    - 🟡 **Zones jaunes / intermédiaires** : contribution moyenne.
+    - 🔵 **Zones bleues / froides** : zones peu ou pas prises en compte par le modèle.
+    
+    ⚠️ **Attention** :
+    - Une heatmap ne montre pas *ce que voit le modèle*, mais *où il regarde*.
+    - Des zones chaudes sur des parties non pertinentes peuvent indiquer un biais ou un sur-apprentissage.
+    - Il est recommandé d’utiliser la heatmap comme **outil de diagnostic** plutôt que comme explication absolue.
+    
+    """)
+
+    
 # -------------------------
 # PAGE 2 : Prototype
 # -------------------------
 elif menu == "🔎 Tester le prototype":
     st.title("🔎 Tester le prototype de diagnostic")
+    st.write("Ceci est une intelligence artificielle. Les informations retournées peuvent être erronées. Veuillez à faire preuve de double diligence.")
+    
     st.write("Suivez les étapes ci-dessous :")
 
     # Étape 1 : Upload
