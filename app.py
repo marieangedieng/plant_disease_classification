@@ -7,6 +7,9 @@ from PIL import Image
 import zipfile, os, io
 import pandas as pd
 from io import StringIO
+import cv2
+import matplotlib.pyplot as plt
+
 
 st.set_page_config(page_title="Diagnostic Phytosanitaire IA", layout="wide")
 
@@ -76,6 +79,57 @@ def handle_upload(uploaded_file):
     return images
 
 # ==========================
+# GRAD-CAM
+# ==========================
+class GradCAM:
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+        self.gradients = None
+        self.activations = None
+        self.hook_layers()
+
+    def hook_layers(self):
+        def forward_hook(module, input, output):
+            self.activations = output.detach()
+
+        def backward_hook(module, grad_input, grad_output):
+            self.gradients = grad_output[0].detach()
+
+        self.target_layer.register_forward_hook(forward_hook)
+        self.target_layer.register_backward_hook(backward_hook)
+
+    def generate(self, input_tensor, class_idx=None):
+        # Forward
+        output = self.model(input_tensor)
+        if class_idx is None:
+            class_idx = output.argmax(dim=1).item()
+
+        # Backward
+        self.model.zero_grad()
+        class_score = output[0, class_idx]
+        class_score.backward()
+
+        # Calcul Grad-CAM
+        weights = self.gradients.mean(dim=(2, 3), keepdim=True)
+        gradcam_map = (weights * self.activations).sum(dim=1, keepdim=True)
+        gradcam_map = torch.relu(gradcam_map)
+
+        # Normalisation
+        gradcam_map = gradcam_map.squeeze().cpu().numpy()
+        gradcam_map = cv2.resize(gradcam_map, (IMG_SIZE, IMG_SIZE))
+        gradcam_map = (gradcam_map - gradcam_map.min()) / (gradcam_map.max() - gradcam_map.min() + 1e-8)
+        return gradcam_map
+
+def apply_heatmap_on_image(image_pil, heatmap):
+    """Superpose la heatmap sur l'image originale."""
+    img = np.array(image_pil.resize((IMG_SIZE, IMG_SIZE)))
+    heatmap_color = cv2.applyColorMap(np.uint8(255 * heatmap), cv2.COLORMAP_JET)
+    heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2RGB)
+    superposed = cv2.addWeighted(img, 0.6, heatmap_color, 0.4, 0)
+    return superposed
+
+# ==========================
 # INTERFACE STREAMLIT
 # ==========================
 
@@ -135,9 +189,15 @@ elif menu == "🔎 Tester le prototype":
                 pred_class, conf = predict(img)
                 fiche = load_fiche(pred_class)
 
-                st.markdown(f"### 🖼️ Image {idx}")
-                st.image(img, caption=f"Image {idx}", use_container_width=True)
+                #Appliquer Grad-CAM
+                gradcam = GradCAM(model, model.features[-1])  # dernière couche conv
+                input_tensor = transform(img).unsqueeze(0)
+                heatmap = gradcam.generate(input_tensor, class_idx=class_names.index(pred_class))
+                heatmap_img = apply_heatmap_on_image(img, heatmap)
 
+                st.markdown(f"### 🖼️ Image {idx}")
+                st.image(heatmap_img, caption=f"Image {idx} avec heatmap Grad-CAM", use_container_width=True)
+                
                 st.markdown(f"""
                 - ✅ Classe prédite : **{pred_class}**  
                 - 🔢 Confiance : **{conf*100:.2f}%**
