@@ -203,6 +203,7 @@ elif menu == "🔎 Tester le prototype":
             st.success(f"{len(images)} image(s) chargée(s).")
 
             # Étape 2 : Prédiction
+            results=[]
             st.subheader("2️⃣ Prédictions avec Heatmaps")
             with st.container():
                 for idx, (img, filename) in enumerate(images, 1):
