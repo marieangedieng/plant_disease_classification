@@ -203,31 +203,28 @@ elif menu == "🔎 Tester le prototype":
             st.success(f"{len(images)} image(s) chargée(s).")
 
             # Étape 2 : Prédiction
-            st.subheader("2️⃣ Prédiction...")
-
-            results = []
-            for idx, (img, filename) in enumerate(images, 1):
-                pred_class, conf = predict(img)
-                fiche = load_fiche(pred_class)
-
-                #Appliquer Grad-CAM
-                gradcam = GradCAM(model, model.features[-1])  # dernière couche conv
-                input_tensor = transform(img).unsqueeze(0)
-                heatmap = gradcam.generate(input_tensor, class_idx=class_names.index(pred_class))
-                heatmap_img = apply_heatmap_on_image(img, heatmap)
-
-                st.markdown(f"### 🖼️ Image {idx}")
-                st.image(heatmap_img, caption=f"Image {idx} avec heatmap Grad-CAM", use_container_width=True)
-                
-                st.markdown(f"""
-                - ✅ Classe prédite : **{pred_class}**  
-                - 🔢 Confiance : **{conf*100:.2f}%**
-                """)
-
-                with st.expander(f"📄 Fiche d'information - {pred_class}"):
-                    st.write(fiche)
-
-                results.append((idx, filename, pred_class, conf))
+            st.subheader("2️⃣ Prédictions avec Heatmaps")
+            with st.container():
+                for idx, (img, filename) in enumerate(images, 1):
+                    pred_class, conf = predict(img)
+                    fiche = load_fiche(pred_class)
+            
+                    # Appliquer Grad-CAM
+                    gradcam = GradCAM(model, model.features[-1])  # dernière couche conv
+                    input_tensor = transform(img).unsqueeze(0)
+                    heatmap = gradcam.generate(input_tensor, class_idx=class_names.index(pred_class))
+                    heatmap_img = apply_heatmap_on_image(img, heatmap)
+            
+                    # Mettre chaque image dans un expander pour rendre scrollable et compact
+                    with st.expander(f"🖼️ Image {idx} - {filename}"):
+                        st.image(heatmap_img, caption=f"{filename} avec heatmap Grad-CAM", use_container_width=True)
+                        st.markdown(f"""
+                        - ✅ Classe prédite : **{pred_class}**  
+                        - 🔢 Confiance : **{conf*100:.2f}%**
+                        """)
+                        st.write(fiche)
+            
+                    results.append((idx, filename, pred_class, conf))
 
             # Étape 3 : Résumé
             st.subheader("3️⃣ Résumé des prédictions")
