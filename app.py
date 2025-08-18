@@ -9,7 +9,7 @@ import pandas as pd
 from io import StringIO
 import cv2
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 
 
 st.set_page_config(page_title="Diagnostic Phytosanitaire IA", layout="wide")
