@@ -163,11 +163,7 @@ if menu == "📖 Informations":
     ### 📱 Résultat attendu
     - Déploiement d’un prototype accessible via une **web app Streamlit**.  
     - L’utilisateur charge une image, l’IA donne le diagnostic instantanément accompagné d’une fiche explicative.  
-    """)
-
-    st.image("heatmap.jpg", caption="Exemple d'interprétation d'une heatmap", use_container_width=True)
     
-    st.markdown("""
     ### 📊 Comment interpréter une Heatmap ?
     Une **heatmap** appliquée à une image permet de visualiser les zones qui ont le plus influencé la décision du modèle.
     Elle est souvent générée avec une méthode comme **Grad-CAM**.
@@ -184,6 +180,7 @@ if menu == "📖 Informations":
     
     """)
 
+    st.image("heatmap.jpg", caption="Exemple d'interprétation d'une heatmap", use_container_width=True)
     
 # -------------------------
 # PAGE 2 : Prototype
