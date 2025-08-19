@@ -141,7 +141,7 @@ menu = st.sidebar.radio("Navigation", ["📖 Informations", "🔎 Tester le prot
 # PAGE 1 : Informations
 # -------------------------
 if menu == "📖 Informations":
-    st.title("📖 Projet : Diagnostic phytosanitaire sur mobile")
+    st.title("📖 Projet : Diagnostic phytosanitaire")
     st.subheader("Auteur : Marie-Ange DIENG")
     
     st.markdown("""
