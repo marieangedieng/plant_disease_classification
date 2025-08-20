@@ -1,5 +1,7 @@
 Plante : Tomate
+
 Maladie : Tache bactérienne
+
 Conseil :
 
 La prévention est la clé. Utiliser des semences traitées à l'eau chaude ou à l'eau de Javel diluée.

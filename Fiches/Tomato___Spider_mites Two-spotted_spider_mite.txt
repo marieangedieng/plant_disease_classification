@@ -1,5 +1,7 @@
 Plante : Tomate
+
 Maladie : Tétranyque à deux points
+
 Conseil :
 
 Maintenir les plantes saines et bien hydratées. Les acariens prolifèrent sur les plantes stressées.

@@ -1,5 +1,7 @@
 Plante : Poivron
+
 Maladie : Tache bactérienne
+
 Conseil :
 
 Utiliser des variétés résistantes ou des semences traitées.

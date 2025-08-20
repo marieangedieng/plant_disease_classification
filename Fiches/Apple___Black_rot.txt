@@ -1,5 +1,7 @@
 Plante : Pommier
+
 Maladie : Pourriture noire
+
 Conseil :
 
 La sanitation est essentielle : enlever et détruire toutes les branches mortes ou infectées, ainsi que les fruits momifiés restés sur l'arbre.

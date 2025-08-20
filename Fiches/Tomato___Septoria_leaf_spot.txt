@@ -1,5 +1,7 @@
 Plante : Tomate
+
 Maladie : Septoriose (Tache des feuilles de Septoria)
+
 Conseil :
 
 Pratiquer la rotation des cultures et l'assainissement du jardin en enlevant les débris.

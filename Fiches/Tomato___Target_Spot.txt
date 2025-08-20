@@ -1,5 +1,7 @@
 Plante : Tomate
+
 Maladie : Tache du goudron (Target Spot)
+
 Conseil :
 
 Utiliser des graines et des plants exempts de pathogènes.

@@ -1,5 +1,7 @@
 Plante : Maïs
+
 Maladie : Helminthosporiose du maïs
+
 Conseil :
 
 Choisir des variétés de maïs résistantes.

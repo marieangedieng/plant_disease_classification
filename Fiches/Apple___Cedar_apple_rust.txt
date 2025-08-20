@@ -1,5 +1,7 @@
 Plante : Pommier
+
 Maladie : Rouille grillagée du cèdre
+
 Conseil :
 
 Éviter de planter des pommiers à proximité de genévriers ou de cèdres de Virginie, car ces arbres sont des hôtes alternatifs nécessaires au champignon.
