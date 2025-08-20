@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 import torch
 import torch.nn as nn
@@ -9,6 +10,7 @@ import pandas as pd
 from io import StringIO
 import cv2
 import matplotlib.pyplot as plt
+
 
 
 st.set_page_config(page_title="Diagnostic Phytosanitaire IA", layout="wide")
@@ -139,7 +141,7 @@ menu = st.sidebar.radio("Navigation", ["📖 Informations", "🔎 Tester le prot
 # PAGE 1 : Informations
 # -------------------------
 if menu == "📖 Informations":
-    st.title("📖 Projet : Diagnostic phytosanitaire sur mobile")
+    st.title("📖 Projet : Diagnostic phytosanitaire")
     st.subheader("Auteur : Marie-Ange DIENG")
     
     st.markdown("""
@@ -161,13 +163,32 @@ if menu == "📖 Informations":
     ### 📱 Résultat attendu
     - Déploiement d’un prototype accessible via une **web app Streamlit**.  
     - L’utilisateur charge une image, l’IA donne le diagnostic instantanément accompagné d’une fiche explicative.  
+    
+    ### 📊 Comment interpréter une Heatmap ?
+    Une **heatmap** appliquée à une image permet de visualiser les zones qui ont le plus influencé la décision du modèle.
+    Elle est souvent générée avec une méthode comme **Grad-CAM**.
+    
+    Voici comment l’interpréter :
+    - 🔴 **Zones rouges / chaudes** : zones les plus importantes utilisées par le modèle pour sa prédiction.
+    - 🟡 **Zones jaunes / intermédiaires** : contribution moyenne.
+    - 🔵 **Zones bleues / froides** : zones peu ou pas prises en compte par le modèle.
+    
+    ⚠️ **Attention** :
+    - Une heatmap ne montre pas *ce que voit le modèle*, mais *où il regarde*.
+    - Des zones chaudes sur des parties non pertinentes peuvent indiquer un biais ou un sur-apprentissage.
+    - Il est recommandé d’utiliser la heatmap comme **outil de diagnostic** plutôt que comme explication absolue.
+    
     """)
 
+    st.image("heatmap.jpg", caption="Exemple d'interprétation d'une heatmap", use_container_width=True)
+    
 # -------------------------
 # PAGE 2 : Prototype
 # -------------------------
 elif menu == "🔎 Tester le prototype":
     st.title("🔎 Tester le prototype de diagnostic")
+    st.write("Ceci est une intelligence artificielle. Les informations retournées peuvent être erronées. Veuillez à faire preuve de double diligence.")
+    
     st.write("Suivez les étapes ci-dessous :")
 
     # Étape 1 : Upload
@@ -182,31 +203,29 @@ elif menu == "🔎 Tester le prototype":
             st.success(f"{len(images)} image(s) chargée(s).")
 
             # Étape 2 : Prédiction
-            st.subheader("2️⃣ Prédiction...")
-
-            results = []
-            for idx, (img, filename) in enumerate(images, 1):
-                pred_class, conf = predict(img)
-                fiche = load_fiche(pred_class)
-
-                #Appliquer Grad-CAM
-                gradcam = GradCAM(model, model.features[-1])  # dernière couche conv
-                input_tensor = transform(img).unsqueeze(0)
-                heatmap = gradcam.generate(input_tensor, class_idx=class_names.index(pred_class))
-                heatmap_img = apply_heatmap_on_image(img, heatmap)
-
-                st.markdown(f"### 🖼️ Image {idx}")
-                st.image(heatmap_img, caption=f"Image {idx} avec heatmap Grad-CAM", use_container_width=True)
-                
-                st.markdown(f"""
-                - ✅ Classe prédite : **{pred_class}**  
-                - 🔢 Confiance : **{conf*100:.2f}%**
-                """)
-
-                with st.expander(f"📄 Fiche d'information - {pred_class}"):
-                    st.write(fiche)
-
-                results.append((idx, filename, pred_class, conf))
+            results=[]
+            st.subheader("2️⃣ Prédictions avec Heatmaps")
+            with st.container():
+                for idx, (img, filename) in enumerate(images, 1):
+                    pred_class, conf = predict(img)
+                    fiche = load_fiche(pred_class)
+            
+                    # Appliquer Grad-CAM
+                    gradcam = GradCAM(model, model.features[-1])  # dernière couche conv
+                    input_tensor = transform(img).unsqueeze(0)
+                    heatmap = gradcam.generate(input_tensor, class_idx=class_names.index(pred_class))
+                    heatmap_img = apply_heatmap_on_image(img, heatmap)
+            
+                    # Mettre chaque image dans un expander pour rendre scrollable et compact
+                    with st.expander(f"🖼️ Image {idx} - {filename}"):
+                        st.image(heatmap_img, caption=f"{filename} avec heatmap Grad-CAM", use_container_width=True)
+                        st.markdown(f"""
+                        - ✅ Classe prédite : **{pred_class}**  
+                        - 🔢 Confiance : **{conf*100:.2f}%**
+                        """)
+                        st.write(fiche)
+            
+                    results.append((idx, filename, pred_class, conf))
 
             # Étape 3 : Résumé
             st.subheader("3️⃣ Résumé des prédictions")
